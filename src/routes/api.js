@@ -4,6 +4,6 @@ import heroes from './heroes'
 
 const api = Router()
 
-api.use('/heroes', heroes)
+api.use('/hero', heroes)
 
 export default api
