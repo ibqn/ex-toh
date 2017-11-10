@@ -1,6 +1,5 @@
 import { Router } from 'express'
 import { Hero } from '../models/hero'
-import { ValidationError } from 'mongoose'
 
 
 const heroes = Router()
@@ -33,12 +32,10 @@ heroes.post('/', async (req, res) => {
       result: savedHero
     })
   } catch(error) {
-
-      res.status(400).json({
-        status: 'failure',
-        message: error.message
-      })
-
+    res.status(400).json({
+      status: 'failure',
+      message: error.message
+    })
   }
 })
 
