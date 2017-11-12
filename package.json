@@ -6,7 +6,9 @@
   "scripts": {
     "lint": "eslint src",
     "clean": "rimraf dist",
-    "start": "nodemon -w src --exec \"babel-node src\""
+    "start": "nodemon --watch src --exec \"babel-node src\"",
+    "build": "babel src --copy-files --out-dir dist",
+    "serve": "node dist"
   },
   "keywords": [],
   "author": "ibqn",
