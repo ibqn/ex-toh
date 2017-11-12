@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
 
 
-const HeroSchema = Schema({
+const heroSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -12,4 +12,18 @@ const HeroSchema = Schema({
   }
 })
 
-export const Hero = mongoose.model('hero', HeroSchema)
+heroSchema.virtual('id').get(function() {
+  return this._id
+})
+
+heroSchema.set('toJSON', {
+  virtuals: true,
+  transform: function(doc, ret, /*options*/) {
+    delete ret.__v;
+    delete ret._id;
+  },
+})
+
+// heroSchema.set('toObject', { virtuals: true })
+
+export const Hero = mongoose.model('hero', heroSchema)
