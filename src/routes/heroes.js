@@ -13,8 +13,25 @@ heroes.get('/', async (req, res) => {
   })
 })
 
+heroes.get('/search/:term', async (req, res) => {
+  try {
+    const searchList = await Hero.find({
+      name: new RegExp(req.params.term, 'i')
+    })
+    res.json({
+      status: 'success',
+      result: searchList
+    })
+  } catch (error) {
+    res.status(400).json({
+      status: 'failure',
+      message: error.message
+    })
+  }
+})
+
 // GET: get one hero by its ID
-heroes.get('/:heroId', async (req, res) => {
+heroes.get('/:heroId([0-9,a-f]*)', async (req, res) => {
   const hero = await Hero.findById({ _id: req.params.heroId })
   res.json({
     status: 'success',
@@ -40,10 +57,9 @@ heroes.post('/', async (req, res) => {
 })
 
 // PUT: update an existing hero by ID
-heroes.put('/:heroId', async (req, res) => {
+heroes.put('/:heroId([0-9,a-f]*)', async (req, res) => {
   try {
     const hero = await Hero.findOneAndUpdate({ _id: req.params.heroId }, req.body, { new: true })
-    console.log(`id: ${req.params.heroId} | hero _id ${hero._id} | name ${hero.name}`)
     res.json({
       status: 'success',
       result: hero
@@ -57,7 +73,7 @@ heroes.put('/:heroId', async (req, res) => {
 })
 
 // DELETE: remove an existing hero by ID
-heroes.delete('/:heroId', async (req, res) => {
+heroes.delete('/:heroId([0-9,a-f]*)', async (req, res) => {
   try {
     const hero = await Hero.findOneAndRemove({ _id: req.params.heroId })
     if (hero === null) throw new Error('Item does not exist')
