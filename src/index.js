@@ -44,7 +44,7 @@ app.use(async (req, res, /*next*/) => {
   })
 })
 
-app.server.listen(process.env.PORT || config.port, () => {
+app.server.listen(process.env.PORT || config.port, async () => {
   console.log(`Started on port ${app.server.address().port}`)
 })
 

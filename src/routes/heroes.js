@@ -15,7 +15,7 @@ heroes.get('/', async (req, res) => {
 
 // GET: get one hero by its ID
 heroes.get('/:heroId', async (req, res) => {
-  const hero = await Hero.findById(req.params.heroId)
+  const hero = await Hero.findById({ _id: req.params.heroId })
   res.json({
     status: 'success',
     result: hero
@@ -41,11 +41,33 @@ heroes.post('/', async (req, res) => {
 
 // PUT: update an existing hero by ID
 heroes.put('/:heroId', async (req, res) => {
-  const hero = await Hero.findOneAndUpdate(req.params.heroId, req.body, { new: true })
-  res.json({
-    status: 'success',
-    result: hero
-  })
+  try {
+    const hero = await Hero.findOneAndUpdate({ _id: req.params.heroId }, req.body, { new: true })
+    console.log(`id: ${req.params.heroId} | hero _id ${hero._id} | name ${hero.name}`)
+    res.json({
+      status: 'success',
+      result: hero
+    })
+  } catch(error) {
+    res.status(400).json({
+      status: 'failure',
+      message: error.message
+    })
+  }
+})
+
+// DELETE: remove an existing hero by ID
+heroes.delete('/:heroId', async (req, res) => {
+  try {
+    const hero = await Hero.findOneAndRemove({ _id: req.params.heroId })
+    if (hero === null) throw new Error('Item does not exist')
+    res.status(204).json()
+  } catch(error) {
+    res.status(400).json({
+      status: 'failure',
+      message: error.message
+    })
+  }
 })
 
 export default heroes
