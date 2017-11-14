@@ -4,6 +4,9 @@ import { Hero } from '../models/hero'
 
 const heroes = Router()
 
+// define the mongobd ObjectId filter once for all routes
+const objectIdFilter = "[0-9,a-f]*"
+
 // GET all heroes
 heroes.get('/', async (req, res) => {
   const heroesList = await Hero.find({})
@@ -31,7 +34,7 @@ heroes.get('/search/:term', async (req, res) => {
 })
 
 // GET: get one hero by its ID
-heroes.get('/:heroId([0-9,a-f]*)', async (req, res) => {
+heroes.get(`/:heroId(${objectIdFilter})`, async (req, res) => {
   const hero = await Hero.findById({ _id: req.params.heroId })
   res.json({
     status: 'success',
@@ -57,7 +60,7 @@ heroes.post('/', async (req, res) => {
 })
 
 // PUT: update an existing hero by ID
-heroes.put('/:heroId([0-9,a-f]*)', async (req, res) => {
+heroes.put(`/:heroId(${objectIdFilter})`, async (req, res) => {
   try {
     const hero = await Hero.findOneAndUpdate({ _id: req.params.heroId }, req.body, { new: true })
     res.json({
@@ -73,7 +76,7 @@ heroes.put('/:heroId([0-9,a-f]*)', async (req, res) => {
 })
 
 // DELETE: remove an existing hero by ID
-heroes.delete('/:heroId([0-9,a-f]*)', async (req, res) => {
+heroes.delete(`/:heroId(${objectIdFilter})`, async (req, res) => {
   try {
     const hero = await Hero.findOneAndRemove({ _id: req.params.heroId })
     if (hero === null) throw new Error('Item does not exist')
